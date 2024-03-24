@@ -2,18 +2,29 @@
 <html>
 <head>
     <title>Object and Gender Detection</title>
-    <script>
-        function redirectToAuthorization() {
-          window.location.href = "/drowsy";
-        }
-    </script>
 </head>
 <body>
     <h1>Object and Gender Detection</h1>
     <div>
-        <img src="{% url 'monitor' %}" alt="Camera Feed" />
+        <img id="cameraFeed" alt="Camera Feed" />
     </div>
     <button onclick="redirectToAuthorization()">Redirect Button</button>
+
+    <script>
+        function redirectToAuthorization() {
+            window.location.href = "/drowsy";
+        }
+
+        function updateCameraFeed() {
+            var img = document.getElementById('cameraFeed');
+            img.src = "{% url 'monitor' %}" + "?t=" + new Date().getTime(); // Add timestamp to prevent caching
+            setTimeout(updateCameraFeed, 1000); // Update every second
+        }
+
+        // Start updating camera feed when the page loads
+        window.onload = function() {
+            updateCameraFeed();
+        };
+    </script>
 </body>
 </html>
-
