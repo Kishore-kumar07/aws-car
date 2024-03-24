@@ -21,5 +21,7 @@ from .views import welcome
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',welcome,name="welcome"),
-    path('authorization',include('authorization.urls'))
+    path('authorization',include('authorization.urls')),
+    path('drowsy',include("drowsiness.urls")),
+    path('newuser',include("registration.urls"))
 ]

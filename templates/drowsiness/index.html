@@ -2,11 +2,41 @@
 <html>
 <head>
     <title>Object and Gender Detection</title>
+    <script>
+        function redirectToAuthorization() {
+          window.location.href = "/drowsy";
+        }
+    </script>
 </head>
 <body>
     <h1>Object and Gender Detection</h1>
     <div>
-        <img src="{% url 'drowsiness:monita' %}" alt="Camera Feed" />
+        <img id="cameraFeed" alt="Camera Feed" />
+        <p id="detectionResult">Loading detection results...</p>
     </div>
+    <button onclick="redirectToAuthorization()">Redirect Button</button>
+
+    <script>
+        async function updateCameraFeed() {
+            var img = document.getElementById('cameraFeed');
+            img.src = "{% url 'drowsiness:monita' %}" + "?t=" + new Date().getTime(); // Add timestamp to prevent caching
+
+            // Fetch model output
+            try {
+                const response = await fetch("{% url 'drowsiness:monita' %}");
+                const result = await response.text();
+                document.getElementById('detectionResult').textContent = result;
+            } catch (error) {
+                console.error('Error fetching detection result:', error);
+            }
+
+            setTimeout(updateCameraFeed, 1000); // Update every second
+        }
+
+        // Start updating camera feed when the page loads
+        window.onload = function() {
+            updateCameraFeed();
+        };
+    </script>
 </body>
 </html>

@@ -58,22 +58,32 @@
     <div class="container">
         <h1>Webcam Capture</h1>
         <p id="imageCounter">Images captured: 0/200</p>
-        <img id="cameraFeed" src="{% url 'webcam' %}" alt="Camera Feed" />
+        <img id="cameraFeed" alt="Camera Feed" style="display:none;" />
+
+        <!-- Button to start the camera -->
+        <button onclick="startCamera()">Start Camera</button>
+
+        <!-- Form to stop the camera -->
         <form id="captureForm" action="{% url 'start_capture' %}" method="post">
             {% csrf_token %}
             <label for="username">Enter Your Name:</label>
             <input type="text" id="username" name="username">
             <button id="startCaptureButton" type="submit">Start Capture</button>
         </form>
-
-        <!-- Form to stop the camera -->
-        <form style="margin-top: 20px;" name ="stopbutton" action="{% url 'stop_camera' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Stop Camera</button>
-        </form>
     </div>
 
     <script>
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const videoElement = document.getElementById('cameraFeed');
+                videoElement.srcObject = stream;
+                videoElement.style.display = 'block'; // Show the video element
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+            }
+        }
+
         // Function to update image counter
         function updateImageCounter(currentCount, totalCount) {
             document.getElementById('imageCounter').innerText = `Images captured: ${currentCount}/${totalCount}`;
