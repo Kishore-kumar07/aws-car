@@ -1,19 +1,32 @@
+<!-- monitor.html -->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Object and Gender Detection</title>
-    <script>
-        function redirectToAuthorization() {
-          window.location.href = "/drowsy";
-        }
-    </script>
+    <title>Camera Feed</title>
 </head>
 <body>
-    <h1>Object and Gender Detection</h1>
+    <h1>Camera Feed</h1>
     <div>
-        <img src="{% url 'monitor' %}" alt="Camera Feed" />
+        <video id="cameraFeed" autoplay></video>
     </div>
-    <button onclick="redirectToAuthorization()">Redirect Button</button>
+    <button onclick="startCamera()">Start Camera</button>
+    <button onclick="redirectToAuthorization()">Redirect</button>
+
+    <script>
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                const videoElement = document.getElementById('cameraFeed');
+                videoElement.srcObject = stream;
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+            }
+        }
+
+        function redirectToAuthorization() {
+            window.location.href = "/drowsy"; // Replace with your desired URL
+        }
+    </script>
 </body>
 </html>
 
